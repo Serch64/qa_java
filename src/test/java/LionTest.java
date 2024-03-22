@@ -1,6 +1,6 @@
 import com.example.Feline;
 import com.example.Lion;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -9,24 +9,28 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LionTest {
+    private static final String EXCEPTION_MESSAGE = "Используйте допустимые значения пола животного - самей или самка";
     private Lion lion;
     @Mock
     private Feline felineMock;
 
-    @Before
-    public void getLion() throws Exception {
+    @Test
+    public void getKittensTest() throws Exception {
         lion = new Lion("Самец", felineMock);
-    }
-    @Test
-    public void getKittensTest() {
-            lion.getKittens();
-            Mockito.verify(felineMock, Mockito.times(1)).getKittens();
+        lion.getKittens();
+        Mockito.verify(felineMock, Mockito.times(1)).getKittens();
     }
 
     @Test
-    public void getFoodTest() throws Exception{
-            lion.getFood();
-            Mockito.verify(felineMock, Mockito.times(1)).getFood("Хищник");
-        }
+    public void getFoodTest() throws Exception {
+        lion = new Lion("Самец", felineMock);
+        lion.getFood();
+        Mockito.verify(felineMock, Mockito.times(1)).getFood("Хищник");
+    }
 
+    @Test
+    public void getLionExceptionTest() {
+        Exception exception = Assert.assertThrows(Exception.class, () -> new Lion("Исключение", felineMock));
+        Assert.assertEquals(EXCEPTION_MESSAGE, exception.getMessage());
+    }
 }
